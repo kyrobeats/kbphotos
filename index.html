@@ -5,10 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Gallery</title>
     <style>
-        :root { --bg: #ffffff; --text: #1a1a1a; --gap: 10px; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-weight: 300; letter-spacing: 2px; text-transform: uppercase; font-size: 1.2rem; }
+        :root { 
+            --bg: #ffffff; 
+            --text: #1a1a1a; 
+            --gap: 15px; 
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 40px 20px; 
+        }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 60px; 
+        }
+
+        h1 { 
+            font-weight: 300; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            font-size: 1.5rem; 
+        }
         
         /* The Grid */
         .gallery {
@@ -18,26 +39,42 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .gallery img {
             width: 100%;
-            height: 300px;
+            height: 350px;
             object-fit: cover;
             cursor: pointer;
-            transition: opacity 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            background-color: #f0f0f0; /* Placeholder color while loading */
         }
-        .gallery img:hover { opacity: 0.8; }
+
+        .gallery img:hover { 
+            opacity: 0.9; 
+            transform: scale(1.01);
+        }
 
         /* Lightbox - The "Enlarge" effect */
         #lightbox {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
-            z-index: 999;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.95);
-            align-items: center; justify-content: center;
+            z-index: 1000;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            align-items: center; 
+            justify-content: center;
+            cursor: zoom-out;
         }
-        #lightbox img { max-width: 90%; max-height: 80vh; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        #lightbox:target { display: flex; }
+
+        #lightbox img { 
+            max-width: 90%; 
+            max-height: 85vh; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            cursor: default;
+        }
     </style>
 </head>
 <body>
@@ -47,24 +84,38 @@
 </header>
 
 <div class="gallery">
-    <a href="#img1"><img src="./image/IMG_0088.JPG" alt="test"></a>
-    <a href="#img2"><img src="images/photo2.webp" alt="Description"></a>
-    <a href="#img3"><img src="images/photo3.webp" alt="Description"></a>
+    <a href="#img1">
+        <img src="image/IMG_0088.JPG" alt="Portfolio Image 1">
+    </a>
 </div>
 
-<div id="img1" class="lightbox-target" onclick="window.location.hash='#'">
-    <div id="lightbox"><img src="images/photo1.webp"></div>
-</div>
-<div id="img2" class="lightbox-target" onclick="window.location.hash='#'">
-    <div id="lightbox"><img src="images/photo2.webp"></div>
+<div id="lightbox" onclick="window.location.hash='#'">
+    <img id="lightbox-img" src="" alt="Enlarged view">
 </div>
 
 <script>
-    // Simple logic to close lightbox when clicking outside the image
-    window.addEventListener('hashchange', function() {
-        const lb = document.querySelectorAll('#lightbox');
-        lb.forEach(el => el.style.display = window.location.hash ? 'flex' : 'none');
-    });
+    // This function runs every time the URL hash changes (e.g., when you click a link)
+    function handleLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const hash = window.location.hash;
+
+        if (hash.startsWith('#img')) {
+            // Find the image inside the gallery that matches the hash
+            const clickedImg = document.querySelector(`a[href="${hash}"] img`);
+            
+            if (clickedImg) {
+                lightboxImg.src = clickedImg.src; // Set lightbox to the clicked image
+                lightbox.style.display = 'flex';  // Show the lightbox
+            }
+        } else {
+            lightbox.style.display = 'none'; // Hide if no hash
+        }
+    }
+
+    // Listen for changes and page loads
+    window.addEventListener('hashchange', handleLightbox);
+    window.addEventListener('load', handleLightbox);
 </script>
 
 </body>
