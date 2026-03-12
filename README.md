@@ -1,2 +1,71 @@
-# kbphotos.github.io
-Photo Catalog
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        :root { --bg: #ffffff; --text: #1a1a1a; --gap: 10px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-weight: 300; letter-spacing: 2px; text-transform: uppercase; font-size: 1.2rem; }
+        
+        /* The Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: var(--gap);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .gallery img:hover { opacity: 0.8; }
+
+        /* Lightbox - The "Enlarge" effect */
+        #lightbox {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.95);
+            align-items: center; justify-content: center;
+        }
+        #lightbox img { max-width: 90%; max-height: 80vh; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        #lightbox:target { display: flex; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Portfolio</h1>
+</header>
+
+<div class="gallery">
+    <a href="#img1"><img src="images/photo1.webp" alt="Description"></a>
+    <a href="#img2"><img src="images/photo2.webp" alt="Description"></a>
+    <a href="#img3"><img src="images/photo3.webp" alt="Description"></a>
+</div>
+
+<div id="img1" class="lightbox-target" onclick="window.location.hash='#'">
+    <div id="lightbox"><img src="images/photo1.webp"></div>
+</div>
+<div id="img2" class="lightbox-target" onclick="window.location.hash='#'">
+    <div id="lightbox"><img src="images/photo2.webp"></div>
+</div>
+
+<script>
+    // Simple logic to close lightbox when clicking outside the image
+    window.addEventListener('hashchange', function() {
+        const lb = document.querySelectorAll('#lightbox');
+        lb.forEach(el => el.style.display = window.location.hash ? 'flex' : 'none');
+    });
+</script>
+
+</body>
+</html>
